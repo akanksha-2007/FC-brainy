@@ -2,7 +2,7 @@
 let cards = [
   { question: "What is the capital of India?", answer: "New Delhi" },
   { question: "What does HTML stand for?", answer: "HyperText Markup Language" },
-  { question: "2 + 2 = ?", answer: "4" },
+  { question: "22*22 = ?", answer: "484" },
   { question: "CSS is used for?", answer: "Styling web pages" }
 ];
 
