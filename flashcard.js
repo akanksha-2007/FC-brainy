@@ -2,9 +2,16 @@
 let cards = [
   { question: "What is the capital of India?", answer: "New Delhi" },
   { question: "What does HTML stand for?", answer: "HyperText Markup Language" },
-  { question: "22*22 = ?", answer: "484" },
-  { question: "CSS is used for?", answer: "Styling web pages" }
-];
+  { question: "22*22?", answer: "484"},
+  { question: "What is the fastest land animal?", answer: " Cheetah" },
+  { question: "Who painted the Mona Lisa?", answer: " Leonardo da Vinci" },
+  { question: "Who was the first person to walk on the moon?", answer: " Neil Armstrong" },
+  { question: " In which year did India gain independence?", answer: "1947" },
+  { question: "What is the chemical symbol for water?", answer: " H₂O" },
+  { question: "Who wrote the play Romeo and Juliet?", answer: "William Shakespeare" },
+  { question: "What is the largest planet in our solar system?", answer: "Jupiter" },
+  { question: "Who invented the light bulb?", answer: "Thomas Elva Edision" },
+]
 
 let currentIndex = 0;
 const flashcard = document.getElementById("flashcard");

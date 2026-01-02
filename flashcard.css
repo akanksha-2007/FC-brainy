@@ -29,6 +29,30 @@ body {
   flex-direction: column;
   align-items: center;
 }
+.flashcard-heading {
+  text-align: center;
+  font-size: 32px;
+  font-weight: bold;
+  color: #ff6600;          /* bright orange highlight */
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  border-bottom: 3px solid #ff6600; /* underline highlight */
+  padding-bottom: 10px;
+  background-color: #fff3e0; /* light background highlight */
+  border-radius: 8px;
+  display: inline-block;
+  padding: 10px 20px;
+}
+
+
+.make-own {
+  text-align: center;
+  font-size: 18px;
+  font-style: italic;
+  color: #008000;          /* green text */
+  margin: 15px 0;
+}
+
 
 .flashcard {
   width: 300px;
@@ -47,6 +71,22 @@ body {
 
 .flashcard.flipped .card-inner {
   transform: rotateY(180deg);
+}
+.card {
+  position: relative; /* taaki label card ke upar attach ho */
+}
+
+.flip-label {
+  position: absolute;
+  top: -25px;          /* card ke upar thoda space */
+  left: 50%;
+  transform: translateX(-50%);
+  background: #ffcc00; /* yellow background for visibility */
+  color: #000;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 3px 8px;
+  border-radius: 5px;
 }
 
 .card-front, .card-back {
