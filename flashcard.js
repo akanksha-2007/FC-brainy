@@ -11,6 +11,15 @@ let cards = [
   { question: "Who wrote the play Romeo and Juliet?", answer: "William Shakespeare" },
   { question: "What is the largest planet in our solar system?", answer: "Jupiter" },
   { question: "Who invented the light bulb?", answer: "Thomas Elva Edision" },
+  { question: " What is the only country that has a flag not shaped as a rectangle?", answer: "Nepal" },
+  { question: "Which planet spins on its side, making its seasons extreme?", answer: "Uranus" },
+  { question: " I speak without a mouth and hear without ears. What am I?", answer: "An echo" },
+  { question: "The more you take away from me, the bigger I get. What am I?", answer: "A hole" },
+  { question: " Who painted the ceiling of the Sistine Chapel?", answer: "Michelangelo" },
+  { question: "Which ancient wonder was located in Babylon?", answer: " The Hanging Gardens" },
+  { question: " What is the hardest natural substance on Earth?", answer: "Diamond" },
+  { question: " Which animal can sleep for up to 3 years?", answer: "Snail" },
+  { question: "What fruit was once called a “Persian apple,” giving rise to its modern name?", answer: "Peach" },
 ]
 
 let currentIndex = 0;
