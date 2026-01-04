@@ -1,0 +1,54 @@
+:root {
+  --accent: #ff9800;     /* bright orange accent */
+  --primary: #2196f3;    /* sky blue */
+  --text-dark: #333;
+  --muted: #555;
+}
+
+/* Background soothing image */
+.landing-bg {
+  background: url('https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=1950&q=80') no-repeat center center fixed;
+  background-size: cover;
+  min-height: 100vh;
+  color: var(--text-dark);
+}
+
+/* Bright transparent box */
+.highlight-box {
+  background: rgba(255, 255, 255, 0.7); /* bright semi-transparent overlay */
+  border: 2px solid var(--primary);
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+.landing-title {
+  font-size: 3.5rem;
+  font-weight: 800;
+  color: var(--accent);
+}
+.landing-subtitle {
+  font-size: 1.25rem;
+  color: var(--muted);
+}
+
+/* Enter box */
+.enter-box {
+  background: rgba(255, 255, 255, 0.8);
+  border: 2px solid var(--accent);
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+.enter-link {
+  display: inline-flex;
+  gap: 10px;
+  align-items: center;
+  font-size: 1.5rem;
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 600;
+}
+.enter-link:hover {
+  color: var(--accent);
+}
+.enter-link .arrow {
+  font-size: 1.8rem;
+}

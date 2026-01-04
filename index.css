@@ -1,0 +1,114 @@
+:root {
+  --accent: #ff9800; /* bright orange */
+  --primary: #2196f3; /* sky blue */
+  --text-dark: #333;
+  --muted: #555;
+}
+/* Study vibes background */
+.study-bg {
+  background: url('https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=1950&q=80') 
+              no-repeat center center fixed;
+  background-size: cover;
+  min-height: 100vh;
+}
+
+/* Transparent card */
+.glass-card {
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid #ddd;
+  border-radius: 14px;
+  color: var(--text-dark);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Headings */
+.text-highlight {
+  color: var(--accent);
+}
+
+/* Flashcard flip */
+.flashcard {
+  width: 100%;
+  height: 200px;
+  perspective: 1000px;
+}
+.flashcard-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.6s ease;
+}
+.flashcard.flip .flashcard-inner {
+  transform: rotateY(180deg);
+}
+.flashcard-face {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: #fff;
+}
+.flashcard-front {
+  color: var(--text-dark);
+}
+.flashcard-back {
+  transform: rotateY(180deg);
+  color: var(--text-dark);
+}
+#yourCards.study-bg {
+  background: url('https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=1950&q=80') no-repeat center center fixed;
+  background-size: cover;
+}
+.flip-label {
+  margin-top: 10px;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+#yourCards .flashcard {
+  /* Flip card styling sirf Your Cards section ke liye */
+  width: 100%;
+  height: 200px;
+  perspective: 1000px;
+}
+#yourCards .flashcard-inner {
+  transition: transform 0.6s ease;
+}
+#yourCards .flashcard.flip .flashcard-inner {
+  transform: rotateY(180deg);
+}
+#quizContainer {
+  background: rgba(255,255,255,0.9);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.quiz-question {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.quiz-feedback {
+  font-weight: 500;
+  margin-top: 10px;
+}
+.progress-block {
+  background: rgba(255,255,255,0.9);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.progress-title {
+  font-weight: 600;
+  margin-bottom: 8px;
+}
