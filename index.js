@@ -1,4 +1,4 @@
- document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', () => {
   // =========================
   // Load data from localStorage
   // =========================
@@ -51,14 +51,12 @@
     if (!container) return;
     container.innerHTML = '';
 
-    // Group cards by category
     const grouped = {};
     cards.forEach((c, i) => {
       if (!grouped[c.category]) grouped[c.category] = [];
       grouped[c.category].push({ ...c, index: i });
     });
 
-    // Render each category block
     Object.entries(grouped).forEach(([category, list]) => {
       const block = document.createElement('div');
       block.className = 'category-block mb-4';
@@ -96,24 +94,20 @@
       });
     });
 
-    // Flip functionality
     container.querySelectorAll('.flashcard').forEach(fc => {
       fc.addEventListener('click', () => fc.classList.toggle('flip'));
     });
 
-    // Known/Unknown checkboxes (mutually exclusive)
     container.querySelectorAll('.known-check').forEach(chk => {
       chk.addEventListener('change', () => {
         const i = chk.dataset.index;
         progress[i] = progress[i] || {};
         progress[i].known = chk.checked;
-
         if (chk.checked) {
           progress[i].unknown = false;
           const unknownChk = container.querySelector(`.unknown-check[data-index="${i}"]`);
           if (unknownChk) unknownChk.checked = false;
         }
-
         localStorage.setItem('progress', JSON.stringify(progress));
         renderProgress();
       });
@@ -124,19 +118,16 @@
         const i = chk.dataset.index;
         progress[i] = progress[i] || {};
         progress[i].unknown = chk.checked;
-
         if (chk.checked) {
           progress[i].known = false;
           const knownChk = container.querySelector(`.known-check[data-index="${i}"]`);
           if (knownChk) knownChk.checked = false;
         }
-
         localStorage.setItem('progress', JSON.stringify(progress));
         renderProgress();
       });
     });
 
-    // Remove button
     container.querySelectorAll('.remove-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         const i = btn.dataset.index;
@@ -154,10 +145,8 @@
       const q = document.getElementById('question').value;
       const a = document.getElementById('answer').value;
       const category = document.getElementById('category').value;
-
       cards.push({ q, a, category });
       localStorage.setItem('userCards', JSON.stringify(cards));
-
       form.reset();
       renderCards();
       renderProgress();
@@ -196,20 +185,6 @@
     let score = 0;
     const total = categoryCards.length;
 
-    function updateProgressBar() {
-      const percent = Math.round((current / total) * 100);
-      const bar = document.getElementById('quizProgress');
-      if (bar) {
-        bar.style.width = percent + '%';
-        bar.textContent = percent + '%';
-        bar.setAttribute('aria-valuenow', percent);
-      }
-      const scoreText = document.getElementById('quizScore');
-      if (scoreText) {
-        scoreText.textContent = `Score: ${score} / ${total}`;
-      }
-    }
-
     function showQuestion() {
       const card = categoryCards[current];
       quizContainer.innerHTML = `
@@ -218,15 +193,16 @@
         <button id="submitAnswer" class="btn btn-primary">Submit</button>
         <div id="quizFeedback" class="quiz-feedback"></div>
       `;
+      const submitBtn = document.getElementById('submitAnswer');
+      const feedback = document.getElementById('quizFeedback');
+      const answerInput = document.getElementById('quizAnswer');
 
-      document.getElementById('submitAnswer').addEventListener('click', () => {
-        const userAns = document.getElementById('quizAnswer').value.trim().toLowerCase();
+      submitBtn.addEventListener('click', () => {
+        const userAns = answerInput.value.trim().toLowerCase();
         const correctAns = card.a.trim().toLowerCase();
-
         if (userAns === correctAns) {
           score++;
           current++;
-          updateProgressBar();
           if (current < total) {
             showQuestion();
           } else {
@@ -239,41 +215,50 @@
             renderProgress();
           }
         } else {
-          document.getElementById('quizFeedback').textContent = "Try again!";
-          document.getElementById('quizFeedback').style.color = "red";
+          feedback.textContent = "Try again!";
+          feedback.style.color = "red";
         }
       });
     }
-
-    updateProgressBar();
     showQuestion();
   }
 
   renderQuizCategories();
-    // =========================
+
+  // =========================
   // PROGRESS TRACKER SECTION
   // =========================
   const overallProgress = document.getElementById('overallProgress');
   const categoryProgress = document.getElementById('categoryProgress');
 
   function renderProgress() {
-    if (!overallProgress || !categoryProgress) return;
+  if (!overallProgress || !categoryProgress) return;
 
-    const totalCards = cards.length;
-    let knownCount = 0,
-        unknownCount = 0;
+  const totalCards = cards.length;
+  let knownCount = 0, unknownCount = 0, unmarkedCount = 0;
 
-    Object.values(progress).forEach(p => {
-      if (p.known) knownCount++;
-      if (p.unknown) unknownCount++;
-    });
+  // Count based on actual cards array
+  cards.forEach((c, i) => {
+    if (progress[i]?.known) {
+      knownCount++;
+    } else if (progress[i]?.unknown) {
+      unknownCount++;
+    } else {
+      unmarkedCount++;
+    }
+  });
 
-    overallProgress.innerHTML = `
-      <h5>Overall Progress</h5>
-      <p>Known: ${knownCount} | Unknown: ${unknownCount} | Total: ${totalCards}</p>
-    `;
+  // Overall stats
+  overallProgress.innerHTML = `
+    <h5>Overall Progress</h5>
+    <p>Known: ${knownCount} | Unknown: ${unknownCount} | Unmarked: ${unmarkedCount} | Total: ${totalCards}</p>
+  `;
 
-    categoryProgress.innerHTML = '<h5>Category Scores</h5>';
+  // Category scores (quiz results)
+  categoryProgress.innerHTML = '<h5>Category Scores</h5>';
+  if (Object.keys(quizScores).length === 0) {
+    categoryProgress.innerHTML += `<p>No quiz attempted yet.</p>`;
+  } else {
     Object.entries(quizScores).forEach(([cat, score]) => {
       const p = document.createElement('p');
       p.textContent = `${cat}: ${score}`;
@@ -281,10 +266,51 @@
     });
   }
 
-  // Initial render
-  renderProgress();
+  // ====== Charts ======
+  const barCtx = document.getElementById('progressBarChart')?.getContext('2d');
+  const pieCtx = document.getElementById('progressPieChart')?.getContext('2d');
+
+  if (barCtx && pieCtx) {
+    if (window.barChart) window.barChart.destroy();
+    if (window.pieChart) window.pieChart.destroy();
+
+    // Bar chart
+    window.barChart = new Chart(barCtx, {
+      type: 'bar',
+      data: {
+        labels: ['Known', 'Unknown', 'Unmarked'],
+        datasets: [{
+          label: 'Cards',
+          data: [knownCount, unknownCount, unmarkedCount],
+          backgroundColor: ['#4CAF50', '#F44336', '#FFC107']
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: { y: { beginAtZero: true, precision: 0 } }
+      }
+    });
+
+    // Pie chart
+    window.pieChart = new Chart(pieCtx, {
+      type: 'pie',
+      data: {
+        labels: ['Known', 'Unknown', 'Unmarked'],
+        datasets: [{
+          data: [knownCount, unknownCount, unmarkedCount],
+          backgroundColor: ['#4CAF50', '#F44336', '#FFC107']
+        }]
+      },
+      options: { responsive: true }
+    });
+  }
+}
+    renderProgress();
 });
-// Navigation tab switching
+// =========================
+// NAVIGATION SECTION
+// =========================
 document.querySelectorAll('.nav-link').forEach(link => {
   link.addEventListener('click', e => {
     e.preventDefault();
@@ -310,5 +336,3 @@ document.querySelectorAll('.nav-link').forEach(link => {
 // By default show home section only
 document.querySelectorAll('section').forEach(sec => sec.style.display = 'none');
 document.getElementById('home').style.display = 'block';
-
-
