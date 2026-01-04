@@ -155,74 +155,99 @@ document.addEventListener('DOMContentLoaded', () => {
 
   renderCards();
 
-  // =========================
-  // QUIZ SECTION
-  // =========================
-  const quizCategories = document.getElementById('quizCategories');
-  const quizContainer = document.getElementById('quizContainer');
+ // =========================
+// QUIZ SECTION
+// =========================
+const quizCategories = document.getElementById('quizCategories');
+const quizContainer = document.getElementById('quizContainer');
 
-  function renderQuizCategories() {
-    if (!quizCategories) return;
-    quizCategories.innerHTML = '';
-    const categories = [...new Set(cards.map(c => c.category))];
-    categories.forEach(cat => {
-      const btn = document.createElement('button');
-      btn.className = 'btn btn-outline-primary';
-      btn.textContent = cat;
-      btn.addEventListener('click', () => startQuiz(cat));
-      quizCategories.appendChild(btn);
+function renderQuizCategories() {
+  if (!quizCategories) return;
+  quizCategories.innerHTML = '';
+  const categories = [...new Set(cards.map(c => c.category))];
+  categories.forEach(cat => {
+    const btn = document.createElement('button');
+    btn.className = 'btn btn-outline-primary m-1';
+    btn.textContent = cat;
+    btn.addEventListener('click', () => startQuiz(cat));
+    quizCategories.appendChild(btn);
+  });
+}
+
+function startQuiz(category) {
+  const categoryCards = cards.filter(
+    c => c.category.toLowerCase() === category.toLowerCase()
+  );
+
+  if (categoryCards.length === 0) {
+    quizContainer.innerHTML = `<p>No cards in this category yet.</p>`;
+    return;
+  }
+
+  let current = 0;
+  let score = 0;
+  const total = categoryCards.length;
+
+  function showQuestion() {
+    const card = categoryCards[current];
+    quizContainer.innerHTML = `
+      <div class="quiz-question fw-bold mb-2">Q${current + 1}: ${card.q}</div>
+      <input type="text" id="quizAnswer" class="form-control mb-2" placeholder="Type your answer">
+      <button id="submitAnswer" class="btn btn-primary">Submit</button>
+      <div id="quizFeedback" class="quiz-feedback mt-2"></div>
+      <div class="progress mb-3 mt-3">
+        <div id="quizProgress" class="progress-bar bg-success" role="progressbar" style="width: 0%">0%</div>
+      </div>
+      <div id="quizScore" class="mb-3 fw-bold text-primary"></div>
+    `;
+
+    const submitBtn = document.getElementById('submitAnswer');
+    const feedback = document.getElementById('quizFeedback');
+    const answerInput = document.getElementById('quizAnswer');
+
+    submitBtn.addEventListener('click', () => {
+      const userAns = answerInput.value.trim().toLowerCase();
+      const correctAns = card.a.trim().toLowerCase();
+
+      if (userAns === correctAns) {
+        score++;
+        current++;
+        updateProgressBar();
+        if (current < total) {
+          showQuestion(); // next question
+        } else {
+          quizContainer.innerHTML = `
+            <h4 class="text-success">Quiz Finished!</h4>
+            <p class="fw-bold">Your Final Score: ${score} / ${total}</p>
+          `;
+          quizScores[category] = `${score} / ${total}`;
+          localStorage.setItem('quizScores', JSON.stringify(quizScores));
+          renderProgress();
+        }
+      } else {
+        feedback.textContent = "Try again!";
+        feedback.style.color = "red";
+      }
     });
   }
 
-  function startQuiz(category) {
-    const categoryCards = cards.filter(c => c.category === category);
-    if (categoryCards.length === 0) {
-      quizContainer.innerHTML = `<p>No cards in this category yet.</p>`;
-      return;
+  function updateProgressBar() {
+    const percent = Math.round((current / total) * 100);
+    const bar = document.getElementById('quizProgress');
+    if (bar) {
+      bar.style.width = percent + '%';
+      bar.textContent = percent + '%';
+      bar.setAttribute('aria-valuenow', percent);
     }
-
-    let current = 0;
-    let score = 0;
-    const total = categoryCards.length;
-
-    function showQuestion() {
-      const card = categoryCards[current];
-      quizContainer.innerHTML = `
-        <div class="quiz-question">Q${current+1}: ${card.q}</div>
-        <input type="text" id="quizAnswer" class="form-control mb-2" placeholder="Type your answer">
-        <button id="submitAnswer" class="btn btn-primary">Submit</button>
-        <div id="quizFeedback" class="quiz-feedback"></div>
-      `;
-      const submitBtn = document.getElementById('submitAnswer');
-      const feedback = document.getElementById('quizFeedback');
-      const answerInput = document.getElementById('quizAnswer');
-
-      submitBtn.addEventListener('click', () => {
-        const userAns = answerInput.value.trim().toLowerCase();
-        const correctAns = card.a.trim().toLowerCase();
-        if (userAns === correctAns) {
-          score++;
-          current++;
-          if (current < total) {
-            showQuestion();
-          } else {
-            quizContainer.innerHTML = `
-              <h4>Quiz Finished!</h4>
-              <p>Your Final Score: ${score} / ${total}</p>
-            `;
-            quizScores[category] = `${score} / ${total}`;
-            localStorage.setItem('quizScores', JSON.stringify(quizScores));
-            renderProgress();
-          }
-        } else {
-          feedback.textContent = "Try again!";
-          feedback.style.color = "red";
-        }
-      });
+    const scoreText = document.getElementById('quizScore');
+    if (scoreText) {
+      scoreText.textContent = `Score: ${score} / ${total}`;
     }
-    showQuestion();
   }
 
+  updateProgressBar();
+  showQuestion();
+}
   renderQuizCategories();
 
   // =========================
