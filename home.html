@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>FC Brainy — Home</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+    />
+    <link rel="stylesheet" href="index.css" />
+  </head>
+  <body class="study-bg">
+    <!-- Navigation bar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+      <div class="container-fluid">
+        <a class="navbar-brand fw-bold text-primary" href="#">FC Brainy</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link active" href="#home">Home</a>
+            </li>
+            <li class="nav-item"><a class="nav-link" href="#quiz">Quiz</a></li>
+            <li class="nav-item">
+              <a class="nav-link" href="#yourCards">Your Cards</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#progress">Progress Tracker</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Home section -->
+    <section id="home" class="container py-5">
+      <div class="card glass-card p-4 mb-4">
+        <h2 class="text-highlight">About FC Brainy</h2>
+        <p class="text-muted">
+          FC Brainy is your smart learning companion. It helps you memorize
+          languages, math formulas, history facts, and more using interactive
+          flashcards. Flip cards to reveal answers, organize them by categories,
+          and test yourself with quizzes.
+        </p>
+      </div>
+
+      <!-- Sample flashcards -->
+      <div class="card glass-card p-4">
+        <h3 class="text-highlight mb-3">Sample Flashcards</h3>
+        <div class="row g-3" id="sampleCards">
+          <!-- Cards injected by JS -->
+        </div>
+      </div>
+    </section>
+    <!-- Your Cards section -->
+    <section id="yourCards" class="container py-5 study-bg">
+      <div class="card glass-card p-4">
+        <h2 class="text-highlight mb-3">Your Cards</h2>
+
+        <!-- Add Card Form -->
+        <form id="createForm" class="row g-2 mb-4">
+          <div class="col-md-6">
+            <input
+              type="text"
+              id="question"
+              class="form-control"
+              placeholder="Enter Question"
+              required
+            />
+          </div>
+          <div class="col-md-6">
+            <input
+              type="text"
+              id="answer"
+              class="form-control"
+              placeholder="Enter Answer"
+              required
+            />
+          </div>
+          <div class="col-md-6">
+            <select id="category" class="form-select">
+              <option value="Science">Science</option>
+              <option value="Maths Formula">Maths Formula</option>
+              <option value="History Facts">History Facts</option>
+              <option value="General Knowledge">General Knowledge</option>
+              <option value="Literature">Literature</option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <button type="submit" class="btn btn-primary w-100">
+              Add Card
+            </button>
+          </div>
+        </form>
+
+        <!-- Categories -->
+        <div id="userCategories" class="d-flex flex-wrap gap-2 mb-3"></div>
+
+        <!-- Organized Cards -->
+        <div id="userCards" class="row g-3"></div>
+      </div>
+    </section>
+    <section id="quiz" class="container py-5 study-bg">
+      <div class="card glass-card p-4">
+        <h2 class="text-highlight">Quiz Section</h2>
+        <p class="text-muted">
+          Select a category to start quiz from your cards.
+        </p>
+
+        <!-- Category buttons -->
+        <div id="quizCategories" class="d-flex flex-wrap gap-2 mb-3"></div>
+
+        <!-- Quiz container -->
+        <div id="quizContainer" class="mt-4"></div>
+      </div>
+    </section>
+    <section id="progress" class="container py-5 study-bg">
+      <div class="card glass-card p-4">
+        <h2 class="text-highlight">Progress Tracker</h2>
+        <p class="text-muted">See how you are doing across categories.</p>
+
+        <!-- Overall stats -->
+        <div id="overallProgress" class="mb-4"></div>
+
+        <!-- Category-wise progress -->
+        <div id="categoryProgress"></div>
+      </div>
+    </section>
+    <script src="index.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+   
+  </body>
+</html>

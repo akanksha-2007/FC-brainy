@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', () => {
+ document.addEventListener('DOMContentLoaded', () => {
   // =========================
   // Load data from localStorage
   // =========================
@@ -101,21 +101,36 @@ document.addEventListener('DOMContentLoaded', () => {
       fc.addEventListener('click', () => fc.classList.toggle('flip'));
     });
 
-    // Known/Unknown checkboxes
+    // Known/Unknown checkboxes (mutually exclusive)
     container.querySelectorAll('.known-check').forEach(chk => {
       chk.addEventListener('change', () => {
         const i = chk.dataset.index;
         progress[i] = progress[i] || {};
         progress[i].known = chk.checked;
+
+        if (chk.checked) {
+          progress[i].unknown = false;
+          const unknownChk = container.querySelector(`.unknown-check[data-index="${i}"]`);
+          if (unknownChk) unknownChk.checked = false;
+        }
+
         localStorage.setItem('progress', JSON.stringify(progress));
         renderProgress();
       });
     });
+
     container.querySelectorAll('.unknown-check').forEach(chk => {
       chk.addEventListener('change', () => {
         const i = chk.dataset.index;
         progress[i] = progress[i] || {};
         progress[i].unknown = chk.checked;
+
+        if (chk.checked) {
+          progress[i].known = false;
+          const knownChk = container.querySelector(`.known-check[data-index="${i}"]`);
+          if (knownChk) knownChk.checked = false;
+        }
+
         localStorage.setItem('progress', JSON.stringify(progress));
         renderProgress();
       });
@@ -235,34 +250,65 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   renderQuizCategories();
-
-  // =========================
+    // =========================
   // PROGRESS TRACKER SECTION
   // =========================
   const overallProgress = document.getElementById('overallProgress');
   const categoryProgress = document.getElementById('categoryProgress');
 
-    function renderProgress() {
-      if (!overallProgress || !categoryProgress) return;
-  
-      const totalCards = cards.length;
-      let knownCount = 0,
-          unknownCount = 0;
-      Object.values(progress).forEach(p => {
-        if (p.known) knownCount++;
-        if (p.unknown) unknownCount++;
-      });
-  
-      overallProgress.innerHTML = `
-        <h5>Overall Progress</h5>
-        <p>Known: ${knownCount} | Unknown: ${unknownCount} | Total: ${totalCards}</p>
-      `;
-  
-      categoryProgress.innerHTML = '<h5>Category Scores</h5>';
-      Object.entries(quizScores).forEach(([cat, score]) => {
-        const p = document.createElement('p');
-        p.textContent = `${cat}: ${score}`;
-        categoryProgress.appendChild(p);
-      });
+  function renderProgress() {
+    if (!overallProgress || !categoryProgress) return;
+
+    const totalCards = cards.length;
+    let knownCount = 0,
+        unknownCount = 0;
+
+    Object.values(progress).forEach(p => {
+      if (p.known) knownCount++;
+      if (p.unknown) unknownCount++;
+    });
+
+    overallProgress.innerHTML = `
+      <h5>Overall Progress</h5>
+      <p>Known: ${knownCount} | Unknown: ${unknownCount} | Total: ${totalCards}</p>
+    `;
+
+    categoryProgress.innerHTML = '<h5>Category Scores</h5>';
+    Object.entries(quizScores).forEach(([cat, score]) => {
+      const p = document.createElement('p');
+      p.textContent = `${cat}: ${score}`;
+      categoryProgress.appendChild(p);
+    });
+  }
+
+  // Initial render
+  renderProgress();
+});
+// Navigation tab switching
+document.querySelectorAll('.nav-link').forEach(link => {
+  link.addEventListener('click', e => {
+    e.preventDefault();
+    const targetId = link.getAttribute('href').substring(1);
+
+    // Hide all sections
+    document.querySelectorAll('section').forEach(sec => {
+      sec.style.display = 'none';
+    });
+
+    // Show selected section
+    const targetSection = document.getElementById(targetId);
+    if (targetSection) {
+      targetSection.style.display = 'block';
     }
+
+    // Active link highlight
+    document.querySelectorAll('.nav-link').forEach(nav => nav.classList.remove('active'));
+    link.classList.add('active');
   });
+});
+
+// By default show home section only
+document.querySelectorAll('section').forEach(sec => sec.style.display = 'none');
+document.getElementById('home').style.display = 'block';
+
+
